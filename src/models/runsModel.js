@@ -12,7 +12,7 @@ const create = async ({ game, user}) => {
   const runsCollection = await connection()
     .then((db) => db.collection('runs'));
   const { insertedId } = await runsCollection
-  .insertOne({ game, name });
+  .insertOne({ game, user });
 
   return {
     id: insertedId,
