@@ -9,4 +9,5 @@ router.get('/:id', rescue(runsController.getById));
 router.put('/:id', validateJWT, rescue(runsController.updateById));
 router.post('/', validateJWT,rescue(runsController.create));
 
+
 module.exports = router;
