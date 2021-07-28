@@ -1,10 +1,12 @@
 const express = require('express');
+const rescue = require('express-rescue');
+const validateJWT = require('../middlewares/validateJWT');
 const {runsController} = require('../controllers')
 
 const router = express.Router();
-router.get('/', runsController.getAll);
-router.get('/:id', runsController.getById)
-router.put('/:id', runsController.updateById)
-router.post('/', runsController.create)
+router.get('/', rescue(runsController.getAll));
+router.get('/:id', rescue(runsController.getById));
+router.put('/:id', validateJWT, rescue(runsController.updateById));
+router.post('/', validateJWT,rescue(runsController.create));
 
 module.exports = router;

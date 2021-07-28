@@ -1,11 +1,12 @@
-const { runsModel } = require('../models');
+const { runsModel, usersModel } = require('../models');
 const { ObjectId } = require('mongodb');
 
 const validateError = (status, message) => ({ status, message });
 
-const create = async({game, user}) => {
-  const idObject = await runsModel.create({ game,user });
-  return idObject;
+const create = async({game, userId}) => {
+  const {username} = await usersModel.getById(userId);
+  const ObjectId = await runsModel.create({ game, userId });
+  return {ObjectId, username};
 }
 
 const getAll = async () => {
@@ -20,8 +21,11 @@ const getById = async (id) => {
   return run;
 };
 
-const updateById = async ({game, user, id}) => {
-  const run = await runsModel.updateById(id, game, user);
+const updateById = async ({game, attempt, id, userId}) => {
+  if (!ObjectId.isValid(id)) throw validateError(404, 'run not found');
+  const runPreupdate = await runsModel.getById(id);
+  if (userId !== runPreupdate.userId) throw validateError(409, 'user not allowed')
+  const run = await runsModel.updateById(id, game, attempt);
   return run;
 };
 

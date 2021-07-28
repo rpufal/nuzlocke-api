@@ -15,6 +15,14 @@ const getById = async (id) => {
   return user;
 };
 
+const getByEmail = async (email) => {
+  const usersCollection = await connection()
+    .then((db) => db.collection('users'));
+  const response = await usersCollection
+    .find({ email }).toArray();
+  return response;
+};
+
 const updateById = async ({id, username, email, password, country}) => {
   const usersCollection = await connection()
     .then((db) => db.collection('users'));
@@ -39,5 +47,6 @@ module.exports = {
   getAll,
   getById,
   create,
-  updateById
+  updateById,
+  getByEmail
 }

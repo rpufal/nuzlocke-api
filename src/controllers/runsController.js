@@ -18,19 +18,21 @@ const getById = async (req, res) => {
 
 const updateById = async (req, res) => {
   const { id } = req.params;
-  const { game,user } = req.body;
-  await runsService.updateById({game, user, id});
+  const { userId } = req;
+  const { game,attempt } = req.body;
+  await runsService.updateById({game, attempt, id, userId});
   return res
     .status(200)
-    .json({id, game, user});
+    .json({id, game, attempt, userId });
 };
 
 const create = async (req, res) => {
-  const { game, user } = req.body;
-  const { id } = await runsService.create({ game, user });
+  const { game } = req.body;
+  const { userId } = req;
+  const { ObjectId, username } = await runsService.create({ game, userId });
   return res
     .status(201)
-    .json({ run: { game, user, runId: id } });
+    .json({ run: { game, username , runId: ObjectId["id"], attempt: 1 } });
 };
 
 module.exports = {

@@ -1,4 +1,6 @@
-const {usersService} = require('../services')
+const {usersService} = require('../services');
+const jwt = require('jsonwebtoken');
+
 
 const getAll = async (_req, res) => {
   const response = await usersService.getAll();
@@ -33,9 +35,25 @@ const create = async (req, res) => {
     .json({ run: { username, password, userId: id, country, email } });
 };
 
+const secret = 'secret';
+
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  const jwtConfig = {
+    expiresIn: '7d',
+    algorithm: 'HS256',
+  };
+  const { _id } = await usersService.login({ email, password });
+  const token = jwt.sign({ data: { id: _id, email } }, secret, jwtConfig);
+  return res
+    .status(200)
+    .json({ token });
+};
+
 module.exports = {
   getAll,
   getById,
   updateById,
-  create
+  create,
+  login
 };
