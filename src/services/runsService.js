@@ -1,4 +1,4 @@
-const { runsModel, usersModel } = require('../models');
+const { runsModel, usersModel } = require('../modelsMONGO');
 const { ObjectId } = require('mongodb');
 
 const validateError = (status, message) => ({ status, message });
@@ -21,13 +21,15 @@ const getById = async (id) => {
   return run;
 };
 
-const updateById = async ({game, attempt, id, userId}) => {
+const updateById = async ({game, status, id, userId}) => {
   if (!ObjectId.isValid(id)) throw validateError(404, 'run not found');
   const runPreupdate = await runsModel.getById(id);
   if (userId !== runPreupdate.userId) throw validateError(409, 'user not allowed')
-  const run = await runsModel.updateById(id, game, attempt);
-  return run;
+  await runsModel.updateById(id, game, status);
+  const runUpdated = await runsModel.getById(id);
+  return runUpdated;
 };
+
 
 module.exports = {
   getAll,

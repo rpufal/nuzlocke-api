@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const userModel = require('../models/usersModel');
+const userModel = require('../modelsMONGO/usersModel');
 
 const secret = 'secret';
 

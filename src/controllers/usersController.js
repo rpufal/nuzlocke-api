@@ -32,7 +32,7 @@ const create = async (req, res) => {
   const { id } = await usersService.create({ username, password, email, country });
   return res
     .status(201)
-    .json({ run: { username, password, userId: id, country, email } });
+    .json({ user: { username, password, userId: id, country, email } });
 };
 
 const secret = 'secret';

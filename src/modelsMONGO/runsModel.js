@@ -15,20 +15,20 @@ const getById = async (id) => {
   return run;
 };
 
-const updateById = async (id, game, attempt) => {
+const updateById = async (id, game, status) => {
   const runsCollection = await connection()
     .then((db) => db.collection('runs'));
 
   await runsCollection
-    .updateOne({ _id: ObjectId(id) }, { $set: { game,attempt } });
-  return { id, game, attempt };
+    .updateOne({ _id: ObjectId(id) }, { $set: { game,status } });
+  return true;
 };
 
 const create = async ({ game, userId}) => {
   const runsCollection = await connection()
     .then((db) => db.collection('runs'));
   const { insertedId } = await runsCollection
-  .insertOne({ game, attempt: 1, userId });
+  .insertOne({ game, attempt: 1, userId, status: {finished: false, win: false, attempt: 1} });
 
   return {
     id: insertedId,
